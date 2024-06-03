@@ -375,3 +375,340 @@ export default App
     <App />
     </Provider>
 ```
+
+## Production Grade Component
+- Input
+  - We will make a separate component for input.
+  - So that we can use it different place.
+- Make a __container__ folder in __components__ -> make a file in it -> __Container.jsx__.
+  - that's a common thing to make. 
+  // add more details about container
+```jsx
+import React from "react";
+
+export default function Container({children}){
+    return <div className="w-full max-w-7xl mx-auto px-4">{children}</div>; 
+}
+```
+- In coperate, we will see this **one line syntaxt** to return.
+- Now go to footer and add this in footer file :-
+```jsx
+import React from 'react'
+import { Link } from 'react-router-dom'
+import Logo from '../Logo'
+
+function Footer() {
+  return (
+    <section className="relative overflow-hidden py-10 bg-gray-400 border border-t-2 border-t-black">
+            <div className="relative z-10 mx-auto max-w-7xl px-4">
+                <div className="-m-6 flex flex-wrap">
+                    <div className="w-full p-6 md:w-1/2 lg:w-5/12">
+                        <div className="flex h-full flex-col justify-between">
+                            <div className="mb-4 inline-flex items-center">
+                                <Logo width="100px" />
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">
+                                    &copy; Copyright 2023. All Rights Reserved by DevUI.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="w-full p-6 md:w-1/2 lg:w-2/12">
+                        <div className="h-full">
+                            <h3 className="tracking-px mb-9  text-xs font-semibold uppercase text-gray-500">
+                                Company
+                            </h3>
+                            <ul>
+                                <li className="mb-4">
+                                    <Link
+                                        className=" text-base font-medium text-gray-900 hover:text-gray-700"
+                                        to="/"
+                                    >
+                                        Features
+                                    </Link>
+                                </li>
+                                <li className="mb-4">
+                                    <Link
+                                        className=" text-base font-medium text-gray-900 hover:text-gray-700"
+                                        to="/"
+                                    >
+                                        Pricing
+                                    </Link>
+                                </li>
+                                <li className="mb-4">
+                                    <Link
+                                        className=" text-base font-medium text-gray-900 hover:text-gray-700"
+                                        to="/"
+                                    >
+                                        Affiliate Program
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        className=" text-base font-medium text-gray-900 hover:text-gray-700"
+                                        to="/"
+                                    >
+                                        Press Kit
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="w-full p-6 md:w-1/2 lg:w-2/12">
+                        <div className="h-full">
+                            <h3 className="tracking-px mb-9  text-xs font-semibold uppercase text-gray-500">
+                                Support
+                            </h3>
+                            <ul>
+                                <li className="mb-4">
+                                    <Link
+                                        className=" text-base font-medium text-gray-900 hover:text-gray-700"
+                                        to="/"
+                                    >
+                                        Account
+                                    </Link>
+                                </li>
+                                <li className="mb-4">
+                                    <Link
+                                        className=" text-base font-medium text-gray-900 hover:text-gray-700"
+                                        to="/"
+                                    >
+                                        Help
+                                    </Link>
+                                </li>
+                                <li className="mb-4">
+                                    <Link
+                                        className=" text-base font-medium text-gray-900 hover:text-gray-700"
+                                        to="/"
+                                    >
+                                        Contact Us
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        className=" text-base font-medium text-gray-900 hover:text-gray-700"
+                                        to="/"
+                                    >
+                                        Customer Support
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="w-full p-6 md:w-1/2 lg:w-3/12">
+                        <div className="h-full">
+                            <h3 className="tracking-px mb-9  text-xs font-semibold uppercase text-gray-500">
+                                Legals
+                            </h3>
+                            <ul>
+                                <li className="mb-4">
+                                    <Link
+                                        className=" text-base font-medium text-gray-900 hover:text-gray-700"
+                                        to="/"
+                                    >
+                                        Terms &amp; Conditions
+                                    </Link>
+                                </li>
+                                <li className="mb-4">
+                                    <Link
+                                        className=" text-base font-medium text-gray-900 hover:text-gray-700"
+                                        to="/"
+                                    >
+                                        Privacy Policy
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        className=" text-base font-medium text-gray-900 hover:text-gray-700"
+                                        to="/"
+                                    >
+                                        Licensing
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+  )
+}
+
+export default Footer
+```
+- Now we will make a logo file in components :-
+```jsx
+import React from "react";
+
+export default function Logo({width = "100px"}){
+    return <div>logo</div>
+}
+```
+- Now make a logout button component in header folder :-
+```jsx
+import React from 'react'
+import {useDispatch} from 'react-redux'
+import authService from '../../appwrite/auth'
+import {logout} from '../../store/authSlice'
+
+function LogoutBtn() {
+    const dispatch = useDispatch()
+    const logoutHandler = () => {
+        authService.logout().then(() => {
+            dispatch(logout())
+        })
+    }
+  return (
+    <button
+    className='inline-bock px-6 py-2 duration-200 hover:bg-blue-100 rounded-full'
+    onClick={logoutHandler}
+    >Logout</button>
+  )
+}
+
+export default LogoutBtn
+```
+- First we make a onClick method, this will call appwrite for logout and dispatch the logout so that in store every thing will be updated.
+- Make sure to export all the component from __index.js file__.
+- Now we gonna add code in header file.
+```jsx
+import React from 'react'
+import {Container, Logo, LogoutBtn} from '../index'
+import { Link } from 'react-router-dom'
+import {useSelector} from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+
+function Header() {
+  const authStatus = useSelector((state) => state.auth.status)
+  const navigate = useNavigate()
+
+  const navItems = [
+    {
+      name: 'Home',
+      slug: "/",
+      active: true
+    }, 
+    {
+      name: "Login",
+      slug: "/login",
+      active: !authStatus,
+  },
+  {
+      name: "Signup",
+      slug: "/signup",
+      active: !authStatus,
+  },
+  {
+      name: "All Posts",
+      slug: "/all-posts",
+      active: authStatus,
+  },
+  {
+      name: "Add Post",
+      slug: "/add-post",
+      active: authStatus,
+  },
+  ]
+
+
+  return (
+    <header className='py-3 shadow bg-gray-500'>
+      <Container>
+        <nav className='flex'>
+          <div className='mr-4'>
+            <Link to='/'>
+              <Logo width='70px'   />
+
+              </Link>
+          </div>
+          <ul className='flex ml-auto'>
+            {navItems.map((item) => 
+            item.active ? (
+              <li key={item.name}>
+                <button
+                onClick={() => navigate(item.slug)}
+                className='inline-bock px-6 py-2 duration-200 hover:bg-blue-100 rounded-full'
+                >{item.name}</button>
+              </li>
+            ) : null
+            )}
+            {authStatus && (
+              <li>
+                <LogoutBtn />
+              </li>
+            )}
+          </ul>
+        </nav>
+        </Container>
+    </header>
+  )
+}
+
+export default Header
+```
+- __Navigation__ from react-router is use to navigate, it just need URL in it which we define __slug__.
+- __useSelector__ help us to get the status, is use login or not.
+- Production level way to show nav item is make a array of object put __name, slug(url) and status__.
+- We will display those nav item who is active only.
+- At last after displaying all nav items we will check authStatus if true then we will show logout componet button.
+```jsx
+{authStatus && (
+              <li>
+                <LogoutBtn />
+              </li>
+            )}
+```
+- This is very common syntax, if __authStatus__ if true then the __parentishis__ will execute otherwise it will not.
+- Now we will make button component like in Production :-
+```jsx
+import React from "react";
+
+export default function Button({
+    children,
+    type = "button",
+    bgColor = "bg-blue-600",
+    textColor = "text-white",
+    className = "",
+    ...props
+}) {
+    return (
+        <button className={`px-4 py-2 rounded-lg ${bgColor} ${textColor} ${className}`} {...props}>
+            {children}
+        </button>
+    );
+}
+```
+- Now we gonna make our input comonent :-
+```jsx
+import React, {useId} from 'react'
+
+const Input = React.forwardRef( function Input({
+    label,
+    type = "text",
+    className = "",
+    ...props
+}, ref){
+    const id = useId()
+    return (
+        <div className='w-full'>
+            {label && <label 
+            className='inline-block mb-1 pl-1' 
+            htmlFor={id}>
+                {label}
+            </label>
+            }
+            <input
+            type={type}
+            className={`px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full ${className}`}
+            ref={ref}
+            {...props}
+            id={id}
+            />
+        </div>
+    )
+})
+
+export default Input
+```
+- we gonna learn about __useRef__ to get reference of something from other component.
