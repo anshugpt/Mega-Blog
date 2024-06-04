@@ -712,3 +712,151 @@ const Input = React.forwardRef( function Input({
 export default Input
 ```
 - we gonna learn about __useRef__ to get reference of something from other component.
+- Now we will make __Select.jsx__ component for our select drop down for active and not active.
+```javascript JSX
+import React, {useId} from 'react'
+
+function Select({
+    options,
+    label,
+    className = "",
+    ...props
+}, ref) {
+    const id = useId()
+  return (
+    <div className='w-full'>
+        {label && <label htmlFor={id} className=''></label>}
+        <select
+        {...props}
+        id={id}
+        ref={ref}
+        className={`px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full ${className}`}
+        >
+            {options?.map((option) => (
+                <option key={option} value={option}>
+                    {option}
+                </option>
+            ))}
+        </select>
+    </div>
+  )
+}
+
+export default React.forwardRef(Select)
+```
+- In option array will come so we goona do conditional loop other wise app will crash.
+- Now we gonna make __PostCard.jsx__ component
+``` javascript JSX
+import React from 'react'
+import appwriteService from "../appwrite/config"
+import {Link} from 'react-router-dom'
+
+function PostCard({$id, title, featuredImage}) {
+    
+  return (
+    <Link to={`/post/${$id}`}>
+        <div className='w-full bg-gray-100 rounded-xl p-4'>
+            <div className='w-full justify-center mb-4'>
+                <img src={appwriteService.getFilePreview(featuredImage)} alt={title}
+                className='rounded-xl' />
+
+            </div>
+            <h2
+            className='text-xl font-bold'
+            >{title}</h2>
+        </div>
+    </Link>
+  )
+}
+
+
+export default PostCard
+```
+- We have to put dollar sign in id thats appwrite syntax.
+- Now we gonna make login component :-
+``` javascript JSX
+import React, {useState} from 'react'
+import {Link, useNavigate} from 'react-router-dom'
+import { login as authLogin } from '../store/authSlice'
+import {Button, Input, Logo} from "./index"
+import {useDispatch} from "react-redux"
+import authService from "../appwrite/auth"
+import {useForm} from "react-hook-form"
+
+function Login() {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const {register, handleSubmit} = useForm()
+    const [error, setError] = useState("")
+
+    const login = async(data) => {
+        setError("")
+        try {
+            const session = await authService.login(data)
+            if (session) {
+                const userData = await authService.getCurrentUser()
+                if(userData) dispatch(authLogin(userData));
+                navigate("/")
+            }
+        } catch (error) {
+            setError(error.message)
+        }
+    }
+
+  return (
+    <div
+    className='flex items-center justify-center w-full'
+    >
+        <div className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}>
+        <div className="mb-2 flex justify-center">
+                    <span className="inline-block w-full max-w-[100px]">
+                        <Logo width="100%" />
+                    </span>
+        </div>
+        <h2 className="text-center text-2xl font-bold leading-tight">Sign in to your account</h2>
+        <p className="mt-2 text-center text-base text-black/60">
+                    Don&apos;t have any account?&nbsp;
+                    <Link
+                        to="/signup"
+                        className="font-medium text-primary transition-all duration-200 hover:underline"
+                    >
+                        Sign Up
+                    </Link>
+        </p>
+        {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
+        <form onSubmit={handleSubmit(login)} className='mt-8'>
+            <div className='space-y-5'>
+                <Input
+                label="Email: "
+                placeholder="Enter your email"
+                type="email"
+                {...register("email", {
+                    required: true,
+                    validate: {
+                        matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                        "Email address must be a valid address",
+                    }
+                })}
+                />
+                <Input
+                label="Password: "
+                type="password"
+                placeholder="Enter your password"
+                {...register("password", {
+                    required: true,
+                })}
+                />
+                <Button
+                type="submit"
+                className="w-full"
+                >Sign in</Button>
+            </div>
+        </form>
+        </div>
+    </div>
+  )
+}
+
+export default Login
+```
+- We changed the name of __login__ that come from __authSlice__ to __authLogin__.
